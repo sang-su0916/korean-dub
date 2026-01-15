@@ -2,6 +2,12 @@
 
 AI-powered video translation service that transforms English content into Korean with professional-quality dubbed audio and accurate subtitles.
 
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/korean-dub?referralCode=korean-dub)
+
+## One-Click Deploy
+
+👉 **[Railway에서 바로 배포하기](https://railway.app/new/github?repo=https://github.com/sang-su0916/korean-dub)**
+
 ## Features
 
 - **Speech Recognition**: OpenAI Whisper API for accurate transcription

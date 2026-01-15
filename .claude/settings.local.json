@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yt-dlp:*)",
+      "mcp__puppeteer__puppeteer_navigate",
+      "mcp__puppeteer__puppeteer_screenshot",
+      "mcp__puppeteer__puppeteer_click",
+      "mcp__puppeteer__puppeteer_fill",
+      "mcp__puppeteer__puppeteer_evaluate",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(vercel:*)",
+      "Bash(railway --version:*)",
+      "Bash(railway login:*)",
+      "Bash(railway whoami:*)",
+      "Bash(open \"https://railway.app/new/github\")",
+      "Bash(echo $RAILWAY_TOKEN)",
+      "Bash(open \"https://railway.app/account/tokens\")"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "obsidian-semantic",
+    "filesystem",
+    "fetch",
+    "puppeteer",
+    "_sequential-thinking",
+    "infranodus"
+  ]
+}
