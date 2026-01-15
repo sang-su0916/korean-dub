@@ -1,0 +1,16 @@
+{
+  "name": "korean-dub",
+  "version": "1.0.0",
+  "description": "AI 영상 번역 서비스 - 영어 영상을 한국어로 더빙",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["korean", "dubbing", "translation", "video", "ai"],
+  "author": "",
+  "license": "MIT"
+}

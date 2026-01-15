@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KoreanDub - Video Translation</title>
+    <title>코리안더빙 - AI 영상 번역 서비스</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -813,8 +813,8 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">KoreanDub</div>
-            <p class="tagline">Upload English video → Get Korean subtitles & dubbing</p>
+            <div class="logo">코리안더빙</div>
+            <p class="tagline">영어 영상 업로드 → 한국어 자막 & 더빙 생성</p>
         </header>
 
         <div class="main-card">
@@ -826,25 +826,25 @@
                             <rect x="3" y="11" width="18" height="11" rx="2"/>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
-                        API Keys
+                        API 키 설정
                     </h3>
-                    <button class="api-toggle" id="apiToggle">Show</button>
+                    <button class="api-toggle" id="apiToggle">보기</button>
                 </div>
                 <div class="api-keys" id="apiKeys">
                     <div class="api-field">
-                        <label>OpenAI API Key (Whisper)</label>
+                        <label>OpenAI API 키 (음성 인식)</label>
                         <input type="password" id="openaiKey" placeholder="sk-..." oninput="saveKey('openai', this.value)">
-                        <div class="api-status missing" id="openaiStatus">Required for transcription</div>
+                        <div class="api-status missing" id="openaiStatus">음성 인식에 필요</div>
                     </div>
                     <div class="api-field">
-                        <label>xAI Grok API Key (Translation)</label>
+                        <label>xAI Grok API 키 (번역)</label>
                         <input type="password" id="grokKey" placeholder="xai-..." oninput="saveKey('grok', this.value)">
-                        <div class="api-status missing" id="grokStatus">Required for translation</div>
+                        <div class="api-status missing" id="grokStatus">번역에 필요</div>
                     </div>
                     <div class="api-field">
-                        <label>ElevenLabs API Key (TTS)</label>
+                        <label>ElevenLabs API 키 (음성 합성)</label>
                         <input type="password" id="elevenKey" placeholder="sk_..." oninput="saveKey('eleven', this.value)">
-                        <div class="api-status missing" id="elevenStatus">Required for dubbing</div>
+                        <div class="api-status missing" id="elevenStatus">더빙에 필요</div>
                     </div>
                 </div>
             </div>
@@ -857,8 +857,8 @@
                         <polyline points="17 8 12 3 7 8"/>
                         <line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    <p class="upload-text">Drop your video here or click to upload</p>
-                    <p class="upload-hint">MP4, MOV, AVI, WebM (max 500MB)</p>
+                    <p class="upload-text">영상을 드래그하거나 클릭하여 업로드</p>
+                    <p class="upload-hint">MP4, MOV, AVI, WebM (최대 500MB)</p>
                     
                     <div class="file-info">
                         <div class="file-icon">
@@ -889,7 +889,7 @@
 
             <!-- Output Options -->
             <div class="options-section">
-                <div class="options-title">Output Options</div>
+                <div class="options-title">출력 옵션</div>
                 <div class="options-grid">
                     <div class="option-card selected" id="optSubtitle" onclick="toggleOption('subtitle')">
                         <div class="option-header">
@@ -905,9 +905,9 @@
                                 <line x1="6" y1="10" x2="10" y2="10"/>
                                 <line x1="6" y1="13" x2="18" y2="13"/>
                             </svg>
-                            <span class="option-label">Korean Subtitles</span>
+                            <span class="option-label">한국어 자막</span>
                         </div>
-                        <p class="option-desc">Generate Korean subtitles (SRT file)</p>
+                        <p class="option-desc">한국어 자막 파일 생성 (SRT)</p>
                     </div>
                     <div class="option-card selected" id="optDubbing" onclick="toggleOption('dubbing')">
                         <div class="option-header">
@@ -921,9 +921,9 @@
                                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
                             </svg>
-                            <span class="option-label">Korean Dubbing</span>
+                            <span class="option-label">한국어 더빙</span>
                         </div>
-                        <p class="option-desc">Generate Korean voice-over audio</p>
+                        <p class="option-desc">한국어 음성 더빙 생성</p>
                     </div>
                 </div>
                 
@@ -942,35 +942,35 @@
                                 <path d="M7 9h4"/>
                                 <path d="M7 12h10"/>
                             </svg>
-                            <span class="option-label">Burn Subtitles into Video</span>
+                            <span class="option-label">영상에 자막 삽입</span>
                         </div>
-                        <p class="option-desc">Hard-code Korean subtitles (cannot be turned off)</p>
+                        <p class="option-desc">자막을 영상에 직접 삽입 (끄기 불가)</p>
                     </div>
                 </div>
             </div>
 
             <div class="voice-section" id="voiceSection">
-                <div class="voice-title">Select Korean Voice</div>
+                <div class="voice-title">한국어 음성 선택</div>
                 <div class="voice-grid">
                     <div class="voice-card selected" data-voice="4JJwo477JUAx3HV0T7n7" onclick="selectVoice(this)">
-                        <div class="voice-avatar">YK</div>
-                        <div class="voice-name">YohanKoo</div>
-                        <div class="voice-type">Male, 30s</div>
+                        <div class="voice-avatar">요한</div>
+                        <div class="voice-name">요한쿠</div>
+                        <div class="voice-type">남성, 30대</div>
                     </div>
                     <div class="voice-card" data-voice="AW5wrnG1jVizOYY7R1Oo" onclick="selectVoice(this)">
-                        <div class="voice-avatar">JY</div>
-                        <div class="voice-name">JiYoung</div>
-                        <div class="voice-type">Female</div>
+                        <div class="voice-avatar">지영</div>
+                        <div class="voice-name">지영</div>
+                        <div class="voice-type">여성</div>
                     </div>
                     <div class="voice-card" data-voice="DMkRitQrfpiddSQT5adl" onclick="selectVoice(this)">
-                        <div class="voice-avatar">JJ</div>
-                        <div class="voice-name">Jjeong</div>
-                        <div class="voice-type">Female, 30s</div>
+                        <div class="voice-avatar">지정</div>
+                        <div class="voice-name">지정</div>
+                        <div class="voice-type">여성, 30대</div>
                     </div>
                     <div class="voice-card" data-voice="Ir7oQcBXWiq4oFGROCfj" onclick="selectVoice(this)">
-                        <div class="voice-avatar">TM</div>
-                        <div class="voice-name">Taemin</div>
-                        <div class="voice-type">Male, 20s</div>
+                        <div class="voice-avatar">태민</div>
+                        <div class="voice-name">태민</div>
+                        <div class="voice-type">남성, 20대</div>
                     </div>
                 </div>
             </div>
@@ -981,7 +981,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="5 3 19 12 5 21 5 3"/>
                     </svg>
-                    Start Processing
+                    변환 시작
                 </button>
             </div>
 
@@ -992,7 +992,7 @@
                         <circle cx="12" cy="12" r="10"/>
                         <polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    Processing Pipeline
+                    처리 파이프라인
                 </div>
                 <div class="pipeline-steps">
                     <div class="pipeline-step" id="stepExtract">
@@ -1003,7 +1003,7 @@
                                 <circle cx="18" cy="16" r="3"/>
                             </svg>
                         </div>
-                        <span class="step-label">Extract Audio</span>
+                        <span class="step-label">오디오 추출</span>
                     </div>
                     <div class="pipeline-step" id="stepTranscribe">
                         <div class="step-icon">
@@ -1012,7 +1012,7 @@
                                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
                             </svg>
                         </div>
-                        <span class="step-label">Transcribe</span>
+                        <span class="step-label">음성 인식</span>
                     </div>
                     <div class="pipeline-step" id="stepTranslate">
                         <div class="step-icon">
@@ -1022,7 +1022,7 @@
                                 <rect x="14" y="14" width="6" height="6" rx="1"/>
                             </svg>
                         </div>
-                        <span class="step-label">Translate</span>
+                        <span class="step-label">번역</span>
                     </div>
                     <div class="pipeline-step" id="stepTTS">
                         <div class="step-icon">
@@ -1031,7 +1031,7 @@
                                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                             </svg>
                         </div>
-                        <span class="step-label">Generate Audio</span>
+                        <span class="step-label">음성 생성</span>
                     </div>
                     <div class="pipeline-step" id="stepCompose">
                         <div class="step-icon">
@@ -1042,7 +1042,7 @@
                                 <line x1="2" y1="12" x2="22" y2="12"/>
                             </svg>
                         </div>
-                        <span class="step-label">Compose Video</span>
+                        <span class="step-label">영상 합성</span>
                     </div>
                     <div class="pipeline-step" id="stepDone">
                         <div class="step-icon">
@@ -1050,12 +1050,12 @@
                                 <polyline points="20 6 9 17 4 12"/>
                             </svg>
                         </div>
-                        <span class="step-label">Complete</span>
+                        <span class="step-label">완료</span>
                     </div>
                 </div>
                 <div class="current-step-info" id="stepInfo">
-                    <div class="step-status" id="stepStatus">Initializing...</div>
-                    <div class="step-detail" id="stepDetail">Preparing to process your video</div>
+                    <div class="step-status" id="stepStatus">초기화 중...</div>
+                    <div class="step-detail" id="stepDetail">영상 처리를 준비하고 있습니다</div>
                 </div>
             </div>
 
@@ -1065,13 +1065,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"/>
                     </svg>
-                    Processing Complete
+                    처리 완료
                 </div>
                 <div class="result-tabs">
-                    <button class="result-tab active" onclick="showResultTab('transcript')">Transcript</button>
-                    <button class="result-tab" onclick="showResultTab('video')" id="tabVideo" style="display:none">Video</button>
-                    <button class="result-tab" onclick="showResultTab('audio')" id="tabAudio" style="display:none">Audio</button>
-                    <button class="result-tab" onclick="showResultTab('download')">Download</button>
+                    <button class="result-tab active" onclick="showResultTab('transcript')">자막</button>
+                    <button class="result-tab" onclick="showResultTab('video')" id="tabVideo" style="display:none">영상</button>
+                    <button class="result-tab" onclick="showResultTab('audio')" id="tabAudio" style="display:none">오디오</button>
+                    <button class="result-tab" onclick="showResultTab('download')">다운로드</button>
                 </div>
                 <div class="result-content">
                     <div class="result-panel active" id="panelTranscript">
@@ -1082,7 +1082,7 @@
                             <video id="resultVideo" controls style="width: 100%; border-radius: 8px;"></video>
                             <div style="margin-top: 12px; text-align: center;">
                                 <button class="download-btn" onclick="downloadVideo()" style="padding: 12px 24px;">
-                                    Download Korean Dubbed Video (MP4)
+                                    한국어 더빙 영상 다운로드 (MP4)
                                 </button>
                             </div>
                         </div>
@@ -1096,10 +1096,10 @@
                                     </svg>
                                 </button>
                                 <div class="audio-info">
-                                    <div class="audio-title">Korean Dubbed Audio</div>
+                                    <div class="audio-title">한국어 더빙 오디오</div>
                                     <div class="audio-duration" id="audioDuration">--:--</div>
                                 </div>
-                                <button class="download-btn" onclick="downloadAudio()">Download MP3</button>
+                                <button class="download-btn" onclick="downloadAudio()">MP3 다운로드</button>
                             </div>
                             <audio id="resultAudio"></audio>
                         </div>
@@ -1108,13 +1108,13 @@
                         <div class="audio-result">
                             <div style="display: flex; flex-direction: column; gap: 12px; padding: 8px 0;">
                                 <button class="download-btn" onclick="downloadVideo()" id="btnDownloadVideo" style="width: 100%; padding: 14px; background: var(--primary); border-color: var(--primary); color: white; display: none;">
-                                    Download Korean Dubbed Video (MP4)
+                                    한국어 더빙 영상 다운로드 (MP4)
                                 </button>
                                 <button class="download-btn" onclick="downloadSRT()" id="btnDownloadSRT" style="width: 100%; padding: 14px;">
-                                    Download Korean Subtitles (SRT)
+                                    한국어 자막 다운로드 (SRT)
                                 </button>
                                 <button class="download-btn" onclick="downloadAudio()" id="btnDownloadAudio" style="width: 100%; padding: 14px; display: none;">
-                                    Download Korean Audio (MP3)
+                                    한국어 오디오 다운로드 (MP3)
                                 </button>
                             </div>
                         </div>
@@ -1177,7 +1177,7 @@
             const toggle = document.getElementById('apiToggle');
             const show = !keys.classList.contains('show');
             keys.classList.toggle('show', show);
-            toggle.textContent = show ? 'Hide' : 'Show';
+            toggle.textContent = show ? '숨기기' : '보기';
         }
 
         function saveKey(type, value) {
@@ -1198,11 +1198,11 @@
                 const el = document.getElementById(check.el);
                 if (check.valid) {
                     el.className = 'api-status ok';
-                    el.textContent = '✓ Configured';
+                    el.textContent = '✓ 설정됨';
                 } else {
                     el.className = 'api-status missing';
-                    el.textContent = key === 'openai' ? 'Required for transcription' :
-                                    key === 'grok' ? 'Required for translation' : 'Required for dubbing';
+                    el.textContent = key === 'openai' ? '음성 인식에 필요' :
+                                    key === 'grok' ? '번역에 필요' : '더빙에 필요';
                 }
             }
         }
@@ -1211,11 +1211,11 @@
         function handleFile(file) {
             if (!file) return;
             if (!file.type.startsWith('video/')) {
-                showToast('Please upload a video file', 'error');
+                showToast('영상 파일을 업로드해주세요', 'error');
                 return;
             }
             if (file.size > 500 * 1024 * 1024) {
-                showToast('File size must be under 500MB', 'error');
+                showToast('파일 크기는 500MB 이하여야 합니다', 'error');
                 return;
             }
 
@@ -1289,29 +1289,29 @@
         async function startProcessing() {
             const btn = document.getElementById('processBtn');
             btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div> Processing...';
+            btn.innerHTML = '<div class="spinner"></div> 처리 중...';
 
             document.getElementById('pipeline').classList.add('show');
             document.getElementById('results').classList.remove('show');
             resetPipeline();
 
             try {
-                updateStep('stepExtract', 'active', 'Extracting audio...', 'Converting video to audio format');
+                updateStep('stepExtract', 'active', '오디오 추출 중...', '영상에서 오디오를 분리하고 있습니다');
                 const audioBlob = await extractAudio(state.file);
                 state.videoDuration = await getVideoDuration(state.file);
                 updateStep('stepExtract', 'done');
 
-                updateStep('stepTranscribe', 'active', 'Transcribing audio...', 'Using OpenAI Whisper for speech recognition');
+                updateStep('stepTranscribe', 'active', '음성 인식 중...', 'OpenAI Whisper로 음성을 텍스트로 변환 중');
                 const transcript = await transcribeAudio(audioBlob);
                 updateStep('stepTranscribe', 'done');
 
-                updateStep('stepTranslate', 'active', 'Translating to Korean...', 'Using Grok for accurate translation');
+                updateStep('stepTranslate', 'active', '한국어로 번역 중...', 'Grok으로 정확한 번역 생성 중');
                 const translated = await translateText(transcript);
                 state.transcript = translated;
                 updateStep('stepTranslate', 'done');
 
                 if (state.options.dubbing) {
-                    updateStep('stepTTS', 'active', 'Generating Korean audio...', 'Creating audio for each segment');
+                    updateStep('stepTTS', 'active', '한국어 음성 생성 중...', '각 구간별 음성을 생성하고 있습니다');
                     state.audioSegments = await generateSegmentTTS(translated);
                     updateStep('stepTTS', 'done');
                 } else {
@@ -1319,14 +1319,14 @@
                 }
 
                 if (state.options.dubbing && state.audioSegments.length > 0) {
-                    updateStep('stepCompose', 'active', 'Composing final video...', 'Syncing audio with timestamps');
+                    updateStep('stepCompose', 'active', '영상 합성 중...', '오디오와 타임스탬프를 동기화하고 있습니다');
                     try {
                         state.videoBlob = await composeVideoWithSegments();
                         updateStep('stepCompose', 'done');
                     } catch (composeError) {
                         console.error('Compose error:', composeError);
                         if (composeError.message.includes('Failed to fetch')) {
-                            throw new Error('Server not running. Run: node server.js');
+                            throw new Error('서버가 실행되지 않았습니다. 실행: node server.js');
                         }
                         throw composeError;
                     }
@@ -1334,19 +1334,19 @@
                     document.getElementById('stepCompose').style.opacity = '0.3';
                 }
 
-                updateStep('stepDone', 'done', 'Processing complete!', state.videoBlob ? 'Your Korean dubbed video is ready' : 'Audio and subtitles ready');
+                updateStep('stepDone', 'done', '처리 완료!', state.videoBlob ? '한국어 더빙 영상이 준비되었습니다' : '오디오와 자막이 준비되었습니다');
                 showResults();
-                showToast('Processing complete!', 'success');
+                showToast('처리가 완료되었습니다!', 'success');
 
             } catch (error) {
                 console.error(error);
-                showToast(error.message || 'Processing failed', 'error');
+                showToast(error.message || '처리 중 오류가 발생했습니다', 'error');
                 updateStep(getCurrentStep(), 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg> Start Processing`;
+                </svg> 변환 시작`;
             }
         }
 
@@ -1614,8 +1614,8 @@
                 const seg = segments[i];
                 const targetDuration = seg.end - seg.start;
                 
-                document.getElementById('stepDetail').textContent = 
-                    `Analyzing segment ${i + 1}/${segments.length}...`;
+                document.getElementById('stepDetail').textContent =
+                    `구간 ${i + 1}/${segments.length} 분석 중...`;
                 
                 const estimated = estimateKoreanReadingTime(seg.korean);
                 const { speed, needsCondensation, ratio } = calculateRequiredSpeed(estimated, targetDuration);
@@ -1624,15 +1624,15 @@
                 
                 let textToSpeak = seg.korean;
                 if (needsCondensation) {
-                    document.getElementById('stepDetail').textContent = 
-                        `Condensing segment ${i + 1}/${segments.length}...`;
+                    document.getElementById('stepDetail').textContent =
+                        `구간 ${i + 1}/${segments.length} 압축 중...`;
                     const targetRatio = Math.max(0.6, 1.0 / ratio * 1.1);
                     textToSpeak = await condenseKoreanText(seg.korean, targetRatio);
                     console.log(`  Condensed: "${seg.korean.substring(0, 20)}..." → "${textToSpeak.substring(0, 20)}..."`);
                 }
                 
-                document.getElementById('stepDetail').textContent = 
-                    `Generating audio ${i + 1}/${segments.length} (${speed.toFixed(1)}x)...`;
+                document.getElementById('stepDetail').textContent =
+                    `음성 생성 ${i + 1}/${segments.length} (${speed.toFixed(1)}x)...`;
                 
                 const audioBlob = await generateTTS(textToSpeak, state.voice, speed);
                 
@@ -1653,7 +1653,7 @@
         }
 
         async function composeVideoWithSegments() {
-            document.getElementById('stepDetail').textContent = 'Uploading files to server...';
+            document.getElementById('stepDetail').textContent = '서버에 파일 업로드 중...';
             
             const formData = new FormData();
             formData.append('video', state.file);
@@ -1682,7 +1682,7 @@
                 formData.append('subtitles', srtContent);
             }
             
-            document.getElementById('stepDetail').textContent = 'Composing video with synced audio...';
+            document.getElementById('stepDetail').textContent = '동기화된 오디오로 영상 합성 중...';
             
             const response = await fetch('/api/compose-segments', {
                 method: 'POST',
@@ -1691,7 +1691,7 @@
             
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Video composition failed');
+                throw new Error(error.error || '영상 합성에 실패했습니다');
             }
             
             return await response.blob();
