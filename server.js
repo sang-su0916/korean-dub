@@ -6,6 +6,23 @@ const crypto = require('crypto');
 
 const PORT = 3000;
 const TEMP_DIR = path.join(__dirname, 'temp');
+const MAX_VIDEO_DURATION = 600; // 10 minutes limit
+
+// Check for yt-dlp availability
+let HAS_YTDLP = false;
+let YTDLP_CMD = 'yt-dlp';
+try {
+    execSync('yt-dlp --version', { encoding: 'utf-8' });
+    HAS_YTDLP = true;
+} catch (e) {
+    try {
+        execSync('youtube-dl --version', { encoding: 'utf-8' });
+        HAS_YTDLP = true;
+        YTDLP_CMD = 'youtube-dl';
+    } catch (e2) {
+        HAS_YTDLP = false;
+    }
+}
 
 // Audio processing limits
 const MAX_RUBBERBAND_STRETCH = 1.3;  // Maximum pitch-preserving stretch
@@ -220,6 +237,165 @@ async function createSilence(durationSec, outputPath) {
     ]);
 }
 
+// YouTube download functions
+async function getYoutubeInfo(url) {
+    return new Promise((resolve, reject) => {
+        const args = [
+            '--dump-json',
+            '--no-playlist',
+            url
+        ];
+
+        const proc = spawn(YTDLP_CMD, args);
+        let stdout = '';
+        let stderr = '';
+
+        proc.stdout.on('data', data => stdout += data.toString());
+        proc.stderr.on('data', data => stderr += data.toString());
+
+        proc.on('close', code => {
+            if (code === 0) {
+                try {
+                    const info = JSON.parse(stdout);
+                    resolve({
+                        id: info.id,
+                        title: info.title,
+                        duration: info.duration,
+                        thumbnail: info.thumbnail,
+                        channel: info.uploader || info.channel,
+                        description: info.description?.substring(0, 200)
+                    });
+                } catch (e) {
+                    reject(new Error('Failed to parse video info'));
+                }
+            } else {
+                reject(new Error(stderr || 'Failed to get video info'));
+            }
+        });
+
+        proc.on('error', () => reject(new Error('yt-dlp not found')));
+    });
+}
+
+async function downloadYoutubeVideo(url, outputPath) {
+    return new Promise((resolve, reject) => {
+        const args = [
+            '-f', 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best[height<=720]',
+            '--merge-output-format', 'mp4',
+            '--no-playlist',
+            '-o', outputPath,
+            url
+        ];
+
+        console.log(`Downloading: ${YTDLP_CMD} ${args.join(' ')}`);
+
+        const proc = spawn(YTDLP_CMD, args);
+        let stderr = '';
+
+        proc.stderr.on('data', data => {
+            const line = data.toString();
+            stderr += line;
+            if (line.includes('%')) {
+                const match = line.match(/(\d+\.?\d*)%/);
+                if (match) {
+                    process.stdout.write(`\r  Download progress: ${match[1]}%`);
+                }
+            }
+        });
+
+        proc.stdout.on('data', data => {
+            const line = data.toString();
+            if (line.includes('%')) {
+                const match = line.match(/(\d+\.?\d*)%/);
+                if (match) {
+                    process.stdout.write(`\r  Download progress: ${match[1]}%`);
+                }
+            }
+        });
+
+        proc.on('close', code => {
+            console.log(''); // New line after progress
+            if (code === 0 && fs.existsSync(outputPath)) {
+                resolve(outputPath);
+            } else {
+                reject(new Error(stderr || 'Download failed'));
+            }
+        });
+
+        proc.on('error', () => reject(new Error('yt-dlp not found')));
+    });
+}
+
+async function handleYoutubeDownload(req, res) {
+    try {
+        let body = '';
+        for await (const chunk of req) {
+            body += chunk;
+        }
+        const { url, download } = JSON.parse(body);
+
+        if (!url) {
+            res.writeHead(400, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'URL is required' }));
+            return;
+        }
+
+        if (!HAS_YTDLP) {
+            res.writeHead(500, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'yt-dlp가 설치되지 않았습니다. brew install yt-dlp 또는 pip install yt-dlp로 설치해주세요.' }));
+            return;
+        }
+
+        console.log(`\n📺 YouTube request: ${url}`);
+
+        // Get video info first
+        const info = await getYoutubeInfo(url);
+        console.log(`  Title: ${info.title}`);
+        console.log(`  Duration: ${info.duration}s`);
+
+        if (info.duration > MAX_VIDEO_DURATION) {
+            res.writeHead(400, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+                error: `영상이 너무 깁니다 (${Math.floor(info.duration / 60)}분). 최대 ${MAX_VIDEO_DURATION / 60}분까지 지원됩니다.`
+            }));
+            return;
+        }
+
+        if (!download) {
+            // Just return info
+            res.writeHead(200, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(info));
+            return;
+        }
+
+        // Download the video
+        const id = crypto.randomBytes(8).toString('hex');
+        const outputPath = path.join(TEMP_DIR, `${id}_youtube.mp4`);
+
+        console.log(`  Downloading to: ${outputPath}`);
+        await downloadYoutubeVideo(url, outputPath);
+
+        // Read and send the file
+        const videoData = fs.readFileSync(outputPath);
+        console.log(`  ✅ Download complete: ${(videoData.length / 1024 / 1024).toFixed(2)} MB`);
+
+        // Clean up
+        fs.unlinkSync(outputPath);
+
+        res.writeHead(200, {
+            ...CORS_HEADERS,
+            'Content-Type': 'video/mp4',
+            'Content-Length': videoData.length
+        });
+        res.end(videoData);
+
+    } catch (error) {
+        console.error('❌ YouTube error:', error.message);
+        res.writeHead(500, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: error.message }));
+    }
+}
+
 async function composeWithSegments(id, videoPath, segments, audioFiles, duration, subtitlePath) {
     const outputPath = path.join(TEMP_DIR, `${id}_output.mp4`);
     const combinedAudioPath = path.join(TEMP_DIR, `${id}_combined.wav`);
@@ -348,6 +524,12 @@ const server = http.createServer(async (req, res) => {
         return;
     }
     
+    // YouTube download endpoint
+    if (req.method === 'POST' && req.url === '/api/youtube-download') {
+        await handleYoutubeDownload(req, res);
+        return;
+    }
+
     if (req.method === 'POST' && req.url === '/api/compose-segments') {
         try {
             console.log('\n========================================');
@@ -436,7 +618,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
     console.log(`
-🎬 KoreanDub Server v3.0
+🎬 KoreanDub Server v3.1
 ========================
 http://localhost:${PORT}
 
@@ -446,10 +628,15 @@ Audio Processing:
   ✓ Adaptive TTS speed support
   ✓ Fade-out instead of hard trim
 
+YouTube Support:
+  ${HAS_YTDLP ? '✓' : '✗'} yt-dlp: ${HAS_YTDLP ? `available (${YTDLP_CMD})` : 'NOT available - install with: brew install yt-dlp'}
+  ✓ Max video duration: ${MAX_VIDEO_DURATION / 60} minutes
+
 Features:
   ✓ Per-segment TTS generation
   ✓ Timestamp-synced audio
   ✓ Optional subtitle burn-in
+  ${HAS_YTDLP ? '✓' : '✗'} YouTube URL direct download
 
 Ready for requests...
 `);

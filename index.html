@@ -143,6 +143,219 @@
         .api-status.ok { color: var(--success); }
         .api-status.missing { color: var(--text-muted); }
 
+        /* Input Tabs */
+        .input-tabs {
+            display: flex;
+            gap: 0;
+            padding: 0 24px;
+            padding-top: 24px;
+        }
+
+        .input-tab {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid var(--border);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .input-tab:hover {
+            color: var(--text-secondary);
+        }
+
+        .input-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .input-tab svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .input-panel {
+            display: none;
+        }
+
+        .input-panel.active {
+            display: block;
+        }
+
+        /* YouTube URL Input */
+        .youtube-section {
+            padding: 32px 24px;
+        }
+
+        .youtube-input-wrapper {
+            display: flex;
+            gap: 12px;
+        }
+
+        .youtube-input {
+            flex: 1;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .youtube-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .youtube-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .youtube-fetch-btn {
+            padding: 14px 24px;
+            border-radius: 10px;
+            border: none;
+            background: #FF0000;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .youtube-fetch-btn:hover:not(:disabled) {
+            background: #CC0000;
+        }
+
+        .youtube-fetch-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .youtube-fetch-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .youtube-hint {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .youtube-status {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 10px;
+            background: var(--bg-input);
+            display: none;
+        }
+
+        .youtube-status.show {
+            display: block;
+        }
+
+        .youtube-status.loading {
+            border: 1px solid var(--primary);
+        }
+
+        .youtube-status.success {
+            border: 1px solid var(--success);
+        }
+
+        .youtube-status.error {
+            border: 1px solid var(--error);
+        }
+
+        .youtube-status-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .youtube-status-header svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .youtube-status.loading .youtube-status-header svg {
+            stroke: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        .youtube-status.success .youtube-status-header svg {
+            stroke: var(--success);
+        }
+
+        .youtube-status.error .youtube-status-header svg {
+            stroke: var(--error);
+        }
+
+        .youtube-status-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .youtube-status-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .youtube-video-info {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 10px;
+            border: 1px solid var(--success);
+        }
+
+        .youtube-video-info.show {
+            display: flex;
+            gap: 16px;
+        }
+
+        .youtube-thumbnail {
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--bg-input);
+        }
+
+        .youtube-video-details {
+            flex: 1;
+        }
+
+        .youtube-video-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .youtube-video-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
         /* Upload Section */
         .upload-section {
             padding: 32px 24px;
@@ -849,8 +1062,65 @@
                 </div>
             </div>
 
-            <!-- Upload Section -->
-            <div class="upload-section">
+            <!-- Input Source Tabs -->
+            <div class="input-tabs">
+                <button class="input-tab active" onclick="switchInputTab('file')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    파일 업로드
+                </button>
+                <button class="input-tab" onclick="switchInputTab('youtube')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                    </svg>
+                    YouTube URL
+                </button>
+            </div>
+
+            <!-- YouTube URL Input Panel -->
+            <div class="input-panel" id="youtubePanel">
+                <div class="youtube-section">
+                    <div class="youtube-input-wrapper">
+                        <input type="text" class="youtube-input" id="youtubeUrl" placeholder="YouTube URL 붙여넣기 (예: https://www.youtube.com/watch?v=...)" oninput="validateYoutubeUrl()">
+                        <button class="youtube-fetch-btn" id="youtubeFetchBtn" onclick="fetchYoutubeVideo()" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            다운로드
+                        </button>
+                    </div>
+                    <p class="youtube-hint">YouTube, YouTube Shorts URL을 지원합니다. 영상 길이 제한: 10분</p>
+
+                    <div class="youtube-status" id="youtubeStatus">
+                        <div class="youtube-status-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="youtubeStatusIcon">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span class="youtube-status-title" id="youtubeStatusTitle">다운로드 중...</span>
+                        </div>
+                        <div class="youtube-status-detail" id="youtubeStatusDetail">영상을 가져오고 있습니다</div>
+                    </div>
+
+                    <div class="youtube-video-info" id="youtubeVideoInfo">
+                        <img class="youtube-thumbnail" id="youtubeThumbnail" src="" alt="thumbnail">
+                        <div class="youtube-video-details">
+                            <div class="youtube-video-title" id="youtubeVideoTitle"></div>
+                            <div class="youtube-video-meta" id="youtubeVideoMeta"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Upload Panel -->
+            <div class="input-panel active" id="filePanel">
+                <div class="upload-section">
                 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
                     <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -884,6 +1154,7 @@
 
                 <div class="video-preview" id="videoPreview">
                     <video id="previewVideo" controls></video>
+                </div>
                 </div>
             </div>
 
@@ -1148,7 +1419,9 @@
             audioBlob: null,
             videoBlob: null,
             ffmpeg: null,
-            ffmpegLoaded: false
+            ffmpegLoaded: false,
+            inputMode: 'file', // 'file' or 'youtube'
+            youtubeInfo: null
         };
 
         // Initialize
@@ -1170,6 +1443,187 @@
                 if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
             });
         });
+
+        // Input Tab Switching
+        function switchInputTab(mode) {
+            state.inputMode = mode;
+
+            document.querySelectorAll('.input-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.input-panel').forEach(panel => panel.classList.remove('active'));
+
+            if (mode === 'youtube') {
+                document.querySelector('.input-tab:nth-child(2)').classList.add('active');
+                document.getElementById('youtubePanel').classList.add('active');
+            } else {
+                document.querySelector('.input-tab:nth-child(1)').classList.add('active');
+                document.getElementById('filePanel').classList.add('active');
+            }
+
+            updateProcessBtn();
+        }
+
+        // YouTube URL Functions
+        function validateYoutubeUrl() {
+            const url = document.getElementById('youtubeUrl').value.trim();
+            const btn = document.getElementById('youtubeFetchBtn');
+            const isValid = isValidYoutubeUrl(url);
+            btn.disabled = !isValid;
+        }
+
+        function isValidYoutubeUrl(url) {
+            const patterns = [
+                /^(https?:\/\/)?(www\.)?youtube\.com\/watch\?v=[\w-]+/,
+                /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/[\w-]+/,
+                /^(https?:\/\/)?youtu\.be\/[\w-]+/,
+                /^(https?:\/\/)?(www\.)?youtube\.com\/embed\/[\w-]+/
+            ];
+            return patterns.some(p => p.test(url));
+        }
+
+        function extractVideoId(url) {
+            const patterns = [
+                /[?&]v=([\w-]+)/,
+                /youtu\.be\/([\w-]+)/,
+                /shorts\/([\w-]+)/,
+                /embed\/([\w-]+)/
+            ];
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        function updateYoutubeStatus(type, title, detail) {
+            const statusEl = document.getElementById('youtubeStatus');
+            const titleEl = document.getElementById('youtubeStatusTitle');
+            const detailEl = document.getElementById('youtubeStatusDetail');
+            const iconEl = document.getElementById('youtubeStatusIcon');
+
+            statusEl.className = `youtube-status show ${type}`;
+            titleEl.textContent = title;
+            detailEl.textContent = detail;
+
+            if (type === 'loading') {
+                iconEl.innerHTML = '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>';
+            } else if (type === 'success') {
+                iconEl.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+            } else if (type === 'error') {
+                iconEl.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+            }
+        }
+
+        async function fetchYoutubeVideo() {
+            const url = document.getElementById('youtubeUrl').value.trim();
+            if (!isValidYoutubeUrl(url)) {
+                showToast('올바른 YouTube URL을 입력해주세요', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('youtubeFetchBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> 다운로드 중...';
+
+            document.getElementById('youtubeVideoInfo').classList.remove('show');
+            updateYoutubeStatus('loading', '영상 정보 가져오는 중...', 'YouTube에서 영상을 다운로드하고 있습니다');
+
+            try {
+                const response = await fetch('/api/youtube-download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '다운로드 실패');
+                }
+
+                const contentType = response.headers.get('Content-Type');
+
+                if (contentType && contentType.includes('application/json')) {
+                    // Info response with video metadata
+                    const info = await response.json();
+                    if (info.error) throw new Error(info.error);
+
+                    state.youtubeInfo = info;
+
+                    // Show video info
+                    document.getElementById('youtubeThumbnail').src = info.thumbnail || '';
+                    document.getElementById('youtubeVideoTitle').textContent = info.title || 'YouTube 영상';
+                    document.getElementById('youtubeVideoMeta').textContent =
+                        `${info.channel || ''} · ${formatDuration(info.duration || 0)}`;
+                    document.getElementById('youtubeVideoInfo').classList.add('show');
+
+                    updateYoutubeStatus('loading', '영상 다운로드 중...', `${info.title?.substring(0, 40)}...`);
+
+                    // Now download the actual video
+                    const videoResponse = await fetch('/api/youtube-download', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url, download: true })
+                    });
+
+                    if (!videoResponse.ok) {
+                        const error = await videoResponse.json();
+                        throw new Error(error.error || '영상 다운로드 실패');
+                    }
+
+                    const videoBlob = await videoResponse.blob();
+                    handleYoutubeDownload(videoBlob, info);
+                } else {
+                    // Direct video blob response
+                    const videoBlob = await response.blob();
+                    handleYoutubeDownload(videoBlob, { title: 'YouTube Video' });
+                }
+
+            } catch (error) {
+                console.error('YouTube download error:', error);
+                updateYoutubeStatus('error', '다운로드 실패', error.message);
+                showToast(error.message || 'YouTube 다운로드 실패', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg> 다운로드`;
+            }
+        }
+
+        function handleYoutubeDownload(videoBlob, info) {
+            const fileName = (info.title || 'youtube_video').replace(/[^\w\s가-힣-]/g, '').substring(0, 50) + '.mp4';
+            state.file = new File([videoBlob], fileName, { type: 'video/mp4' });
+            state.videoUrl = URL.createObjectURL(state.file);
+            state.youtubeInfo = info;
+
+            updateYoutubeStatus('success', '다운로드 완료!', `${fileName} (${formatSize(videoBlob.size)})`);
+
+            // Show preview
+            const preview = document.getElementById('videoPreview');
+            const video = document.getElementById('previewVideo');
+            video.src = state.videoUrl;
+            preview.classList.add('show');
+
+            // Update file upload zone to show the file
+            const zone = document.getElementById('uploadZone');
+            zone.classList.add('has-file');
+            document.getElementById('fileName').textContent = fileName;
+            document.getElementById('fileSize').textContent = formatSize(videoBlob.size);
+
+            updateProcessBtn();
+            showToast('YouTube 영상이 준비되었습니다!', 'success');
+        }
+
+        function formatDuration(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            if (h > 0) {
+                return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
 
         // API Keys
         function toggleApiKeys() {
