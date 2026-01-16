@@ -1,21 +1,31 @@
 FROM node:20-slim
 
-# FFmpeg 및 rubberband 설치
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     ffmpeg \
-    librubberband-dev \
+    python3 \
+    python3-pip \
+    && pip3 install --break-system-packages yt-dlp \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Create app directory
 WORKDIR /app
 
-COPY package.json ./
-RUN npm install --production
+# Copy package files
+COPY package*.json ./
 
+# Install dependencies
+RUN npm install
+
+# Copy app source
 COPY . .
 
-# temp 디렉토리 생성
+# Create temp directory
 RUN mkdir -p temp
 
+# Expose port
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Start the app
+CMD ["node", "server.js"]
