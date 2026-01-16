@@ -1,19 +1,25 @@
+---
+title: Korean Dub
+emoji: 🎬
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 3000
+pinned: false
+license: mit
+---
+
 # KoreanDub - AI Video Translation & Dubbing
 
 AI-powered video translation service that transforms English content into Korean with professional-quality dubbed audio and accurate subtitles.
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/korean-dub?referralCode=korean-dub)
-
-## One-Click Deploy
-
-👉 **[Railway에서 바로 배포하기](https://railway.app/new/github?repo=https://github.com/sang-su0916/korean-dub)**
-
 ## Features
 
+- **YouTube URL 직접 입력** 또는 파일 업로드
 - **Speech Recognition**: OpenAI Whisper API for accurate transcription
-- **Translation**: xAI Grok for contextual Korean translation  
+- **Translation**: xAI Grok for contextual Korean translation
 - **Text-to-Speech**: ElevenLabs for natural Korean voices
-- **Smart Audio Sync**: 
+- **Smart Audio Sync**:
   - Adaptive TTS speed (0.7-1.2x)
   - AI text condensation for long translations
   - Pitch-preserving rubberband time-stretch
@@ -42,16 +48,6 @@ open http://localhost:3000
 
 ```
 Input Video (EN) → Whisper → Grok Translation → ElevenLabs TTS → FFmpeg Merge → Output (KO)
-```
-
-## Audio Processing Pipeline
-
-```
-1. Estimate Korean reading time
-2. If ratio > 1.5x → Condense text via Grok
-3. Generate TTS with adaptive speed (1.0-1.2x)
-4. Post-process with rubberband (max 1.3x stretch)
-5. Apply fade-out if needed (no hard trim)
 ```
 
 ## License
